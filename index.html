@@ -243,6 +243,86 @@ footer {
   font-size: 12px;
 }
 
+/* Custom wallpaper layers */
+.preview {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.wallpaper-layer {
+  position: absolute;
+  inset: -10px;
+  z-index: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(var(--wallpaper-blur, 0px));
+  transform: scale(1.04);
+  display: none;
+}
+
+.wallpaper-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(5, 3, 12, var(--wallpaper-dim, .45));
+  pointer-events: none;
+}
+
+#effects {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.preview > *:not(.wallpaper-layer):not(.wallpaper-shade):not(#effects) {
+  position: relative;
+  z-index: 3;
+}
+
+/* Floating stars and particles */
+.spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--highlight);
+  box-shadow: 0 0 9px var(--accent);
+  animation: float-up var(--duration, 8s) linear infinite;
+  opacity: 0;
+}
+
+@keyframes float-up {
+  0% { transform: translateY(25px); opacity: 0; }
+  15% { opacity: .8; }
+  85% { opacity: .55; }
+  100% {
+    transform: translate(var(--side, 20px), -360px);
+    opacity: 0;
+  }
+}
+
+/* Aurora and ambient lighting */
+body.effect-aurora {
+  background: linear-gradient(
+    125deg, #070b1d, #241044, #064e4b, var(--bg)
+  );
+  background-size: 300% 300%;
+  animation: aurora-flow 16s ease infinite;
+}
+
+@keyframes aurora-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+body.effect-ambient .preview {
+  animation: ambient 5s ease-in-out infinite;
+}
+
 @keyframes ambient {
   0%, 100% { box-shadow: 0 0 18px #a855f722; }
   50% { box-shadow: 0 0 32px #a855f755; }
