@@ -718,6 +718,72 @@ try {
 
 updateWallpaperAdjustments();
 
+function buildEffects(effect) {
+  const layer = $("effects");
+
+  layer.replaceChildren();
+
+  document.body.classList.remove(
+    "effect-aurora",
+    "effect-ambient"
+  );
+
+  if (effect === "aurora") {
+    document.body.classList.add("effect-aurora");
+    return;
+  }
+
+  if (effect === "ambient") {
+    document.body.classList.add("effect-ambient");
+    return;
+  }
+
+  if (effect !== "stars" && effect !== "particles") {
+    return;
+  }
+
+  const count = effect === "stars" ? 32 : 24;
+
+  for (let i = 0; i < count; i++) {
+    const spark = document.createElement("i");
+
+    spark.className = "spark";
+    spark.setAttribute("aria-hidden", "true");
+
+    const size = effect === "stars"
+      ? 1 + Math.random() * 2
+      : 2 + Math.random() * 4;
+
+    spark.style.left = `${Math.random() * 100}%`;
+    spark.style.top = `${45 + Math.random() * 65}%`;
+    spark.style.width = `${size}px`;
+    spark.style.height = `${size}px`;
+    spark.style.setProperty(
+      "--duration",
+      `${6 + Math.random() * 10}s`
+    );
+    spark.style.setProperty(
+      "--side",
+      `${-45 + Math.random() * 90}px`
+    );
+    spark.style.animationDelay = `${-Math.random() * 15}s`;
+
+    if (effect === "particles") {
+      spark.style.background = "#ffffff";
+      spark.style.boxShadow = "0 0 12px var(--highlight)";
+    }
+
+    layer.appendChild(spark);
+  }
+}
+
+$("effect").addEventListener("change", () => {
+  buildEffects($("effect").value);
+  announce("Visual effect changed.");
+});
+
+buildEffects($("effect").value);
+
 </script>
 </body>
 </html>
