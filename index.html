@@ -447,6 +447,29 @@ body.animate .preview { animation: ambient 5s ease-in-out infinite; }
         <option value="nebula">Nebula Bloom</option>
       </select>
     </div>
+    <div class="control">
+  <label for="wallFile">Custom wallpaper</label>
+  <input id="wallFile" type="file" accept="image/*"
+    style="display:block;width:100%;margin-top:8px;font-size:13px">
+  <p class="description">Choose an image from Photos or Files. Maximum 2 MB.</p>
+  <button class="btn" id="removeWallpaper" type="button">Remove wallpaper</button>
+</div>
+
+<div class="control">
+  <div class="control-head">
+    <label for="dim">Wallpaper dimming</label>
+    <span class="value" id="dimValue">45%</span>
+  </div>
+  <input id="dim" type="range" min="0" max="90" value="45">
+</div>
+
+<div class="control">
+  <div class="control-head">
+    <label for="wallblur">Wallpaper blur</label>
+    <span class="value" id="wallblurValue">0px</span>
+  </div>
+  <input id="wallblur" type="range" min="0" max="20" value="0">
+</div>
 
     <div class="actions">
       <button class="btn" id="applyPreset">Apply preset</button>
