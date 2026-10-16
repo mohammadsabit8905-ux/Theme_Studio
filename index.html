@@ -612,6 +612,97 @@ try {
 } catch {
   applyTheme(defaults);
 }
+
+const wallpaperLayer = $("wallpaperLayer");
+const wallpaperShade = $("wallpaperShade");
+const wallFile = $("wallFile");
+
+function setWallpaper(data) {
+  wallpaperLayer.style.backgroundImage = data
+    ? `url("${data}")`
+    : "none";
+
+  wallpaperLayer.style.display = data ? "block" : "none";
+
+  if (data) {
+    wallpaperLayer.style.backgroundSize = "cover";
+    wallpaperLayer.style.backgroundPosition = "center";
+  }
+
+  try {
+    if (data) {
+      localStorage.setItem("theme-studio-wallpaper", data);
+    } else {
+      localStorage.removeItem("theme-studio-wallpaper");
+    }
+  } catch {
+    announce("Wallpaper couldn't be saved. Try a smaller image.");
+  }
+}
+
+function updateWallpaperAdjustments() {
+  const dim = Number($("dim").value);
+  const blur = Number($("wallblur").value);
+
+  wallpaperShade.style.background =
+    `rgba(5, 3, 12, ${dim / 100})`;
+
+  wallpaperLayer.style.setProperty(
+    "--wallpaper-blur",
+    `${blur}px`
+  );
+
+  $("dimValue").textContent = `${dim}%`;
+  $("wallblurValue").textContent = `${blur}px`;
+}
+
+wallFile.addEventListener("change", () => {
+  const file = wallFile.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    announce("Please choose an image.");
+    wallFile.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    announce("That image is over 2 MB. Choose a smaller one.");
+    wallFile.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    setWallpaper(reader.result);
+    updateWallpaperAdjustments();
+    announce("Wallpaper applied to your preview!");
+  };
+
+  reader.onerror = () => announce("Couldn't read that image. Try another.");
+
+  reader.readAsDataURL(file);
+});
+
+$("dim").addEventListener("input", updateWallpaperAdjustments);
+$("wallblur").addEventListener("input", updateWallpaperAdjustments);
+
+$("removeWallpaper").addEventListener("click", () => {
+  setWallpaper("");
+  wallFile.value = "";
+  updateWallpaperAdjustments();
+  announce("Wallpaper removed.");
+});
+
+try {
+  setWallpaper(localStorage.getItem("theme-studio-wallpaper") || "");
+} catch {
+  setWallpaper("");
+}
+
+updateWallpaperAdjustments();
+
 </script>
 </body>
 </html>
